@@ -16,6 +16,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.FrameLayout
+import java.util.Locale
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -184,6 +185,10 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             binding.switch1.toggle()
         }
 
+        // Show the labels in Title Case, whatever the (translated) strings look like
+        for (label in arrayOf(binding.docLabel, binding.urlLabel, binding.filepickerLabel, binding.settingsLabel))
+            label.text = label.text.toString().toTitleCase()
+
         // These cards are plain layouts, tell accessibility services they behave like buttons
         for (card in arrayOf(binding.docBtn, binding.urlBtn, binding.filepickerBtn, binding.settingsBtn))
             card.exposeAsButton()
@@ -192,6 +197,12 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             binding.settingsBtn.setOnLongClickListener { showDebugMenu(); true }
         }
     }
+
+    // first letter of every word (letters/digits and apostrophes continue a word)
+    private val wordStart = Regex("(?<![\\p{L}\\p{N}'\u2019])\\p{Ll}")
+
+    private fun String.toTitleCase() =
+        wordStart.replace(this) { it.value.uppercase(Locale.getDefault()) }
 
     private fun View.exposeAsButton() {
         ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {

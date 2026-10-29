@@ -92,17 +92,15 @@
                         app:tint="?attr/colorOnPrimaryContainer" />
 
                     <TextView
+                        android:id="@+id/docLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:gravity="center"
-                        android:letterSpacing="0.05"
                         android:text="@string/action_open_doc_tree"
-                        android:textAllCaps="true"
                         android:textAppearance="?attr/textAppearanceLabelLarge"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/main_card_label_size"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/main_card_label_size" />
                 </is.xyz.mpv.MainCardLayout>
 
                 <is.xyz.mpv.MainCardLayout
@@ -130,17 +128,15 @@
                         app:tint="?attr/colorOnPrimaryContainer" />
 
                     <TextView
+                        android:id="@+id/urlLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:gravity="center"
-                        android:letterSpacing="0.05"
                         android:text="@string/action_open_url"
-                        android:textAllCaps="true"
                         android:textAppearance="?attr/textAppearanceLabelLarge"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/main_card_label_size"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/main_card_label_size" />
                 </is.xyz.mpv.MainCardLayout>
             </LinearLayout>
 
@@ -175,17 +171,15 @@
                         app:tint="?attr/colorOnPrimaryContainer" />
 
                     <TextView
+                        android:id="@+id/filepickerLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:gravity="center"
-                        android:letterSpacing="0.05"
                         android:text="@string/file_picker_old"
-                        android:textAllCaps="true"
                         android:textAppearance="?attr/textAppearanceLabelLarge"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/main_card_label_size"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/main_card_label_size" />
                 </is.xyz.mpv.MainCardLayout>
 
                 <is.xyz.mpv.MainCardLayout
@@ -213,17 +207,15 @@
                         app:tint="?attr/colorOnPrimaryContainer" />
 
                     <TextView
+                        android:id="@+id/settingsLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
                         android:gravity="center"
-                        android:letterSpacing="0.05"
                         android:text="@string/action_settings"
-                        android:textAllCaps="true"
                         android:textAppearance="?attr/textAppearanceLabelLarge"
                         android:textColor="?attr/colorOnSurface"
-                        android:textSize="@dimen/main_card_label_size"
-                        android:textStyle="bold" />
+                        android:textSize="@dimen/main_card_label_size" />
                 </is.xyz.mpv.MainCardLayout>
             </LinearLayout>
         </LinearLayout>

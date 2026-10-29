@@ -7,6 +7,6 @@
     <dimen name="main_icon_size">44dp</dimen>
     <dimen name="main_card_margin">6dp</dimen>
     <dimen name="main_card_padding">10dp</dimen>
-    <dimen name="main_card_label_size">13sp</dimen>
     <dimen name="main_icon_padding">11dp</dimen>
+    <dimen name="main_card_label_size">13sp</dimen>
 </resources>

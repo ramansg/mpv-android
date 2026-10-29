@@ -7,8 +7,8 @@
     <dimen name="main_icon_size">72dp</dimen>
     <dimen name="main_card_margin">10dp</dimen>
     <dimen name="main_card_padding">20dp</dimen>
-    <dimen name="main_card_label_size">18sp</dimen>
     <dimen name="main_row_text_size">18sp</dimen>
     <dimen name="main_row_min_height">64dp</dimen>
     <dimen name="main_icon_padding">18dp</dimen>
+    <dimen name="main_card_label_size">18sp</dimen>
 </resources>
