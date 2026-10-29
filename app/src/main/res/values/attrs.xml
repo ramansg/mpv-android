@@ -22,4 +22,9 @@
     <attr name="nnf_separator_color" format="color"/>
     <!-- Drawable to use as a divider between list items (optional) -->
     <attr name="nnf_list_item_divider" format="reference"/>
+
+    <!-- Home screen action card: optionally forces a square shape -->
+    <declare-styleable name="MainCardLayout">
+        <attr name="mainCardSquare" format="boolean" />
+    </declare-styleable>
 </resources>

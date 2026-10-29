@@ -2,24 +2,31 @@ package `is`.xyz.mpv
 
 import `is`.xyz.filepicker.DocumentPickerFragment
 import `is`.xyz.mpv.preferences.PreferenceActivity
-import `is`.xyz.mpv.databinding.FragmentMainScreenBinding
+import `is`.xyz.mpv.databinding.MainScreenContentBinding
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
 import android.preference.PreferenceManager
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.Button
+import android.widget.FrameLayout
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
-import androidx.core.view.isVisible
+import androidx.core.view.AccessibilityDelegateCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.accessibility.AccessibilityNodeInfoCompat
 import androidx.fragment.app.Fragment
 
 class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
-    private lateinit var binding: FragmentMainScreenBinding
+    private lateinit var binding: MainScreenContentBinding
 
     private lateinit var documentTreeOpener: ActivityResultLauncher<Uri?>
     private lateinit var filePickerLauncher: ActivityResultLauncher<Intent>
@@ -35,6 +42,11 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         firstRun = savedInstanceState == null
+        savedInstanceState?.let {
+            prev = it.getString("prev", "")
+            prevData = it.getString("prevData")
+            lastPath = it.getString("lastPath", "")
+        }
 
         documentTreeOpener = registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) {
             it?.let { root ->
@@ -78,17 +90,68 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        binding = FragmentMainScreenBinding.bind(view)
+        val container = view as FrameLayout
 
-        Utils.handleInsetsAsPadding(binding.root)
+        // We draw edge-to-edge, so keep the content clear of the system bars and display cutout
+        ViewCompat.setOnApplyWindowInsetsListener(container) { v, insets ->
+            val i = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout())
+            v.setPadding(i.left, i.top, i.right, i.bottom)
+            insets
+        }
 
+        inflateContent(container)
+    }
+
+    /**
+     * Inflates the home screen into [container]. The portrait and landscape variants are separate
+     * layouts, and since MainActivity handles orientation changes itself (no activity restart),
+     * this is also called again from [onConfigurationChanged] to switch between them.
+     */
+    private fun inflateContent(container: FrameLayout) {
+        // carry the UI state over when re-inflating
+        val old = if (::binding.isInitialized) binding else null
+        val wasChecked = old?.switch1?.isChecked ?: false
+        val docEnabled = old?.docBtn?.isEnabled ?: true
+        val focusedId = container.findFocus()?.id ?: View.NO_ID
+
+        container.removeAllViews()
+        binding = MainScreenContentBinding.inflate(LayoutInflater.from(requireContext()), container, true)
+        binding.switch1.isChecked = wasChecked
+        if (!docEnabled)
+            disableDocButton()
+        setupViews()
+
+        container.post {
+            if (!isAdded || !::binding.isInitialized)
+                return@post
+            if (focusedId != View.NO_ID) {
+                container.findViewById<View>(focusedId)?.requestFocus()
+            } else if (isLeanback()) {
+                // On TV there is no touch mode: make sure something is focused from the start
+                if (!binding.docBtn.requestFocus())
+                    binding.urlBtn.requestFocus()
+            }
+        }
+    }
+
+    private fun isLeanback() =
+        requireContext().packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)
+
+    private fun disableDocButton() {
+        binding.docBtn.isEnabled = false
+        binding.docBtn.alpha = 0.38f
+    }
+
+    private fun setupViews() {
         binding.docBtn.setOnClickListener {
             try {
                 documentTreeOpener.launch(null)
             } catch (e: ActivityNotFoundException) {
                 // Android TV doesn't come with a document picker and certain versions just throw
                 // instead of handling this gracefully
-                binding.docBtn.isEnabled = false
+                disableDocButton()
+                binding.urlBtn.requestFocus()
             }
         }
         binding.urlBtn.setOnClickListener {
@@ -116,11 +179,27 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
             startActivity(Intent(context, PreferenceActivity::class.java))
         }
 
+        // The whole row is the target (touch, D-pad and TV remote), the switch only shows the state
+        binding.rememberRow.setOnClickListener {
+            binding.switch1.toggle()
+        }
+
+        // These cards are plain layouts, tell accessibility services they behave like buttons
+        for (card in arrayOf(binding.docBtn, binding.urlBtn, binding.filepickerBtn, binding.settingsBtn))
+            card.exposeAsButton()
+
         if (BuildConfig.DEBUG) {
             binding.settingsBtn.setOnLongClickListener { showDebugMenu(); true }
         }
+    }
 
-        onConfigurationChanged(view.resources.configuration)
+    private fun View.exposeAsButton() {
+        ViewCompat.setAccessibilityDelegate(this, object : AccessibilityDelegateCompat() {
+            override fun onInitializeAccessibilityNodeInfo(host: View, info: AccessibilityNodeInfoCompat) {
+                super.onInitializeAccessibilityNodeInfo(host, info)
+                info.className = Button::class.java.name
+            }
+        })
     }
 
     private fun showDebugMenu() {
@@ -139,10 +218,15 @@ class MainScreenFragment : Fragment(R.layout.fragment_main_screen) {
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        // phone screens are too small to show the action buttons alongside the logo
-        if (!Utils.isXLargeTablet(requireContext())) {
-            binding.logo.isVisible = newConfig.orientation != Configuration.ORIENTATION_LANDSCAPE
-        }
+        // pick the portrait or landscape layout that fits the new configuration
+        (view as? FrameLayout)?.let { inflateContent(it) }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putString("prev", prev)
+        outState.putString("prevData", prevData)
+        outState.putString("lastPath", lastPath)
     }
 
     override fun onResume() {

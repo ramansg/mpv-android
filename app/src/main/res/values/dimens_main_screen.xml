@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Home screen sizing. Overridden for landscape, tablets and TV. -->
+    <dimen name="main_padding_h">20dp</dimen>
+    <dimen name="main_padding_v">12dp</dimen>
+    <dimen name="main_logo_size">128dp</dimen>
+    <dimen name="main_title_size">28sp</dimen>
+    <dimen name="main_icon_size">56dp</dimen>
+    <dimen name="main_card_margin">7dp</dimen>
+    <dimen name="main_card_padding">16dp</dimen>
+    <dimen name="main_card_label_size">14sp</dimen>
+    <dimen name="main_row_text_size">14sp</dimen>
+    <dimen name="main_row_min_height">56dp</dimen>
+    <dimen name="main_icon_padding">14dp</dimen>
+</resources>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Home screen (landscape / TV): logo, title and "remember" row on the left, 2x2 action cards on the right -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:orientation="horizontal"
+    android:paddingLeft="@dimen/main_padding_h"
+    android:paddingTop="@dimen/main_padding_v"
+    android:paddingRight="@dimen/main_padding_h"
+    android:paddingBottom="@dimen/main_padding_v">
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="4"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical">
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="8dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/logo"
+                    android:layout_width="@dimen/main_logo_size"
+                    android:layout_height="@dimen/main_logo_size"
+                    android:importantForAccessibility="no"
+                    app:srcCompat="@drawable/mpv_logo" />
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="@string/mpv_activity"
+                    android:textAppearance="?attr/textAppearanceHeadlineMedium"
+                    android:textColor="?attr/colorOnSurface"
+                    android:textSize="@dimen/main_title_size"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="8dp" />
+
+            <LinearLayout
+                android:id="@+id/rememberRow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/main_card_margin"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/main_card_margin"
+                android:layout_marginBottom="@dimen/main_card_margin"
+                android:background="@drawable/bg_main_row"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:minHeight="@dimen/main_row_min_height"
+                android:orientation="horizontal"
+                android:paddingStart="16dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:stateListAnimator="@animator/main_focus_scale">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:paddingEnd="8dp"
+                    android:text="@string/option_remember_choice"
+                    android:textAppearance="?attr/textAppearanceBodyLarge"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="@dimen/main_row_text_size" />
+
+                <!-- The whole row is the touch/focus target; the switch only shows the state -->
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/switch1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@null"
+                    android:clickable="false"
+                    android:focusable="false" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <ScrollView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="6"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:fillViewport="true"
+        android:overScrollMode="ifContentScrolls"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipChildren="false"
+                android:orientation="horizontal">
+
+                <is.xyz.mpv.MainCardLayout
+                    android:id="@+id/docBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/main_card_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_main_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusedByDefault="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/main_card_padding"
+                    android:stateListAnimator="@animator/main_focus_scale">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_icon_size"
+                        android:layout_height="@dimen/main_icon_size"
+                        android:background="@drawable/bg_main_icon"
+                        android:importantForAccessibility="no"
+                        android:padding="@dimen/main_icon_padding"
+                        app:srcCompat="@drawable/ic_file_open_48dp"
+                        app:tint="?attr/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:letterSpacing="0.05"
+                        android:text="@string/action_open_doc_tree"
+                        android:textAllCaps="true"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="@dimen/main_card_label_size"
+                        android:textStyle="bold" />
+                </is.xyz.mpv.MainCardLayout>
+
+                <is.xyz.mpv.MainCardLayout
+                    android:id="@+id/urlBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/main_card_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_main_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/main_card_padding"
+                    android:stateListAnimator="@animator/main_focus_scale">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_icon_size"
+                        android:layout_height="@dimen/main_icon_size"
+                        android:background="@drawable/bg_main_icon"
+                        android:importantForAccessibility="no"
+                        android:padding="@dimen/main_icon_padding"
+                        app:srcCompat="@drawable/ic_link_48dp"
+                        app:tint="?attr/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:letterSpacing="0.05"
+                        android:text="@string/action_open_url"
+                        android:textAllCaps="true"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="@dimen/main_card_label_size"
+                        android:textStyle="bold" />
+                </is.xyz.mpv.MainCardLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:clipChildren="false"
+                android:orientation="horizontal">
+
+                <is.xyz.mpv.MainCardLayout
+                    android:id="@+id/filepickerBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/main_card_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_main_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/main_card_padding"
+                    android:stateListAnimator="@animator/main_focus_scale">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_icon_size"
+                        android:layout_height="@dimen/main_icon_size"
+                        android:background="@drawable/bg_main_icon"
+                        android:importantForAccessibility="no"
+                        android:padding="@dimen/main_icon_padding"
+                        app:srcCompat="@drawable/ic_folder_white_48dp"
+                        app:tint="?attr/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:letterSpacing="0.05"
+                        android:text="@string/file_picker_old"
+                        android:textAllCaps="true"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="@dimen/main_card_label_size"
+                        android:textStyle="bold" />
+                </is.xyz.mpv.MainCardLayout>
+
+                <is.xyz.mpv.MainCardLayout
+                    android:id="@+id/settingsBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/main_card_margin"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_main_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/main_card_padding"
+                    android:stateListAnimator="@animator/main_focus_scale">
+
+                    <ImageView
+                        android:layout_width="@dimen/main_icon_size"
+                        android:layout_height="@dimen/main_icon_size"
+                        android:background="@drawable/bg_main_icon"
+                        android:importantForAccessibility="no"
+                        android:padding="@dimen/main_icon_padding"
+                        app:srcCompat="@drawable/ic_settings_black_48dp"
+                        app:tint="?attr/colorOnPrimaryContainer" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:letterSpacing="0.05"
+                        android:text="@string/action_settings"
+                        android:textAllCaps="true"
+                        android:textAppearance="?attr/textAppearanceLabelLarge"
+                        android:textColor="?attr/colorOnSurface"
+                        android:textSize="@dimen/main_card_label_size"
+                        android:textStyle="bold" />
+                </is.xyz.mpv.MainCardLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

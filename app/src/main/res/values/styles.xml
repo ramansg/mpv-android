@@ -40,6 +40,11 @@
         <item name="alertDialogTheme">@style/AppTheme.Preference.AlertDialog</item>
     </style>
 
+    <!-- theme for the home screen: same Material 3 base as the preferences, but without an action bar -->
+    <style name="AppTheme.Main" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="alertDialogTheme">@style/AppTheme.Preference.AlertDialog</item>
+    </style>
+
     <style name="AppTheme.Toolbar.Style" parent="Widget.Material3.Toolbar">
         <item name="android:background">?colorSurface</item>
     </style>

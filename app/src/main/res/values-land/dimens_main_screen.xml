@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="main_padding_h">24dp</dimen>
+    <dimen name="main_padding_v">8dp</dimen>
+    <dimen name="main_logo_size">112dp</dimen>
+    <dimen name="main_title_size">24sp</dimen>
+    <dimen name="main_icon_size">44dp</dimen>
+    <dimen name="main_card_margin">6dp</dimen>
+    <dimen name="main_card_padding">10dp</dimen>
+    <dimen name="main_card_label_size">13sp</dimen>
+    <dimen name="main_icon_padding">11dp</dimen>
+</resources>
