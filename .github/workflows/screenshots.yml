@@ -5,7 +5,7 @@ name: build-and-screenshot
 # Then boots an emulator and captures the home page and the General settings page.
 
 on:
-  push:
+  # Manual only: Actions tab -> "build-and-screenshot" -> "Run workflow" (pick the branch)
   workflow_dispatch:
 
 env:
@@ -29,7 +29,7 @@ jobs:
       - name: Fetch prebuilt native libs from the official release
         run: |
           set -e
-          for abi in x86_64 arm64-v8a; do
+          for abi in x86_64 armeabi-v7a; do   # x86_64 = emulator (screenshots), armeabi-v7a = your phone
             curl -fL "https://github.com/mpv-android/mpv-android/releases/download/${LIBS_RELEASE}/app-default-${abi}-release.apk" -o "$abi.apk"
             mkdir -p "app/src/main/libs/$abi"
             unzip -j -o "$abi.apk" "lib/$abi/*.so" -d "app/src/main/libs/$abi"
@@ -146,6 +146,10 @@ jobs:
           shot home_dark
           key KEYCODE_DPAD_DOWN
           shot home_dark_focus
+          # A touch (on the non-clickable logo) leaves keyboard-navigation mode, so the
+          # next screenshots show the normal touch-mode look without a focus outline
+          tap resource-id 'logo$' || exit 1
+          sleep 1
 
           # Landscape (dark), without and with focus
           rotate 1
@@ -154,6 +158,8 @@ jobs:
           shot home_dark_landscape
           key KEYCODE_DPAD_DOWN
           shot home_dark_landscape_focus
+          tap resource-id 'logo$' || exit 1
+          sleep 1
 
           # Landscape (light)
           adb shell cmd uimode night no
@@ -186,10 +192,11 @@ jobs:
           path: shots/
           if-no-files-found: warn
 
-      - name: Upload APKs
+      - name: Upload APK for the phone (armeabi-v7a)
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: apks
-          path: app/build/outputs/apk/default/debug/*.apk
+          name: apk-armeabi-v7a
+          # the x86_64 and universal APKs are also built, but only this one is needed for the phone
+          path: app/build/outputs/apk/default/debug/*armeabi-v7a*.apk
           if-no-files-found: warn
