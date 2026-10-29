@@ -113,16 +113,56 @@ jobs:
           adb shell am start -n is.xyz.mpv/.MainActivity
           sleep 5
 
-          # Home page
-          waitfor resource-id 'settingsBtn$' || exit 1
-          adb exec-out screencap -p > shots/home.png
+          key() { adb shell input keyevent "$1"; sleep 1.5; }
+          shot() { adb exec-out screencap -p > "shots/$1.png"; }
+          rotate() { # 0 = portrait, 1 = landscape
+            adb shell settings put system accelerometer_rotation 0
+            adb shell settings put system user_rotation "$1"
+            sleep 3
+          }
 
-          # General settings page
+          # Home page (light, portrait)
+          waitfor resource-id 'settingsBtn$' || exit 1
+          sleep 1
+          shot home
+
+          # General settings page (light)
           tap resource-id 'settingsBtn$' || exit 1
           tap text '^General$' || exit 1
           waitfor text 'Material You' || exit 1
           sleep 1
-          adb exec-out screencap -p > shots/general_settings.png
+          shot general_settings
+
+          # Back to the home page
+          key KEYCODE_BACK
+          key KEYCODE_BACK
+          waitfor resource-id 'settingsBtn$' || exit 1
+
+          # Home page (dark), plus the D-pad / TV-remote focus highlight
+          adb shell cmd uimode night yes
+          sleep 3
+          waitfor resource-id 'settingsBtn$' || exit 1
+          sleep 1
+          shot home_dark
+          key KEYCODE_DPAD_DOWN
+          shot home_dark_focus
+
+          # Landscape (dark), without and with focus
+          rotate 1
+          waitfor resource-id 'settingsBtn$' || exit 1
+          sleep 1
+          shot home_dark_landscape
+          key KEYCODE_DPAD_DOWN
+          shot home_dark_landscape_focus
+
+          # Landscape (light)
+          adb shell cmd uimode night no
+          sleep 3
+          waitfor resource-id 'settingsBtn$' || exit 1
+          sleep 1
+          shot home_landscape
+
+          rotate 0
 
           ls -l shots
           EOF
